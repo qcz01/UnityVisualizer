@@ -37,7 +37,7 @@ Problems can be either one-shot or lifelong (multi-goal).
 ## Build Unity Standalone Application
 1. Download Unity from [https://unity.com/download](https://unity.com/download)
 2. Create a Unity project
-3. Put the code in the project
+3. Put the Assets in the project
 4. Build and run
 
 
