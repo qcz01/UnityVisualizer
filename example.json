@@ -1,0 +1,9 @@
+{
+  "map": "./Assets/Resources/Maps/random-32-32-10.map",
+  "instance": "./Assets/Resources/Instances/random-32-32-10/random-32-32-10_agents100_0.scen",
+  "paths": "./Assets/Resources/PathFile/random-32-32-10_agents100_demo.txt",
+  "actions": "",
+  "gui": true,
+  "speed": 1,
+  "labels": false
+}
