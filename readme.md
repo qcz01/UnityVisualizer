@@ -3,6 +3,8 @@ Multi-Robot Motion Planning Algorithms, Benchmark Instances, and Visualization
 
 ## Dependencies
 Unity: [https://unity.com/download](https://unity.com/download)
+Pybind11: [https://pybind11.readthedocs.io/en/stable/](https://pybind11.readthedocs.io/en/stable/)
+
 
 ## Next steps
 1. A mechanism to generate problems. 
@@ -23,7 +25,7 @@ Problems can be either one-shot or lifelong (multi-goal).
     ├── Scripts/
 ├── src/
 ├── setup.py
-├── simulator,py
+├── simulator.py
 ├── readme.md
 
 ```
