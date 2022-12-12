@@ -45,4 +45,4 @@ Problems can be either one-shot or lifelong (multi-goal).
 `python simulator.py --json example.json`
 
 ## Run visualizer with commnad line
-`.\MAPF.exe --map map_file --instance instance_file --paths paths_file`
+`.\MAPF-2D.exe --map map_file --instance instance_file --paths paths_file`
