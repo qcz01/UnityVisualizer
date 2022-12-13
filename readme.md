@@ -34,7 +34,7 @@ Problems can be either one-shot or lifelong (multi-goal).
 ## Build C++ MAPF Simulator Library Using Pybind11
 `python setup.py build_ext --inplace`
 
-## Build Unity Standalone Application
+## Build Unity Standalone Visualizer
 1. Download Unity from [https://unity.com/download](https://unity.com/download)
 2. Create a Unity project
 3. Put the Assets in the project
