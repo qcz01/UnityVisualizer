@@ -1,4 +1,4 @@
-# mapf-simulator
+# MAPF-simulator
 Multi-Robot Motion Planning Algorithms, Benchmark Instances, and Visualization 
 
 ## Dependencies
