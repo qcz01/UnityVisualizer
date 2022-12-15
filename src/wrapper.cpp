@@ -21,6 +21,9 @@ PYBIND11_MODULE(MAPFSim, m ){
         .def("setRotationCost",&Simulator::setRotationCost,"set rotation cost")
         .def("getNumObstacles",&Simulator::getNumObstacles,"num obstacles")
         .def("setEnvSize",&Simulator::setEnvSize,"set map size")
+        .def("addGoalToAgent",&Simulator::addGoalToAgent,"add goal to agent")
+        .def("getCurrentGoalOfAgent",&Simulator::getCurrentGoalOfAgent,"get current goal of agent")
+        .def("getNextCorrectedAction",&Simulator::getNextCorrectedAction,"get next corrected action")
         .def("checkConfigFeasible",&Simulator::checkConfigFeasible,"check feasible");
 
     py::enum_<ACTION>(m,"ACTION")

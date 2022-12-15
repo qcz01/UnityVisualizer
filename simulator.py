@@ -85,7 +85,7 @@ def test_zmq_with_unity(paths_file):
     print("socket binded","tcp://*:5556")
     socket.bind("tcp://*:5556")
     t=0
-    time.sleep(5)
+    time.sleep(10)
     while t<len(actions[0]):
         test_dict=dict()
         for i,action in enumerate(actions):
@@ -146,6 +146,10 @@ def main():
                     print(args.paths)
                     test_zmq_with_unity(args.paths)
                 t.join()
+
+    else:
+        paths_file="C:/Users/GREATEN/MAPF-2D/Assets/Resources/PathFile/den312_demo.txt"
+        test_zmq_with_unity(paths_file)
  
             
 

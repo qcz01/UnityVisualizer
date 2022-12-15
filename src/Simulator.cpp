@@ -45,6 +45,7 @@ int Simulator::addAgent(int x,int y,int direction){
         directions.push_back(direction);
         pos_dict[{x,y}]=config.size()-1;
         rotation_counter.push_back(0);
+        goals.push_back(std::queue<point2d>());
         
     }
     return config.size()-1;
@@ -87,7 +88,7 @@ int Simulator::addObstacle(int x,int y){
 void Simulator::step(std::vector<ACTION> actions){
     // printf(" step   ??????\n");
     nextPos=config;
-    
+    corrected_actions=actions;
     Config tmp_next=getNextPosition(actions);
     
     // printf("next porb pos=(%d,%d)\n",tmp_next[0].first,tmp_next[0].second);
@@ -99,6 +100,7 @@ void Simulator::step(std::vector<ACTION> actions){
         nextPos[i]=config[i];
         moved.insert(i);
         occupied.insert(config[i]);
+        corrected_actions[i]=ACTION::WAIT;
     };
     auto forwardAgent=[&](int i){
         // printf("forward agent %d\n",i);
@@ -311,4 +313,37 @@ void Simulator::setEnvSize(int xmax,int ymax){
 /// @param rotation_cost 
 void Simulator::setRotationCost(int rotation_cost){
     this->rotation_cost=rotation_cost;
+}
+
+/// @brief 
+/// @param agent 
+/// @param goal 
+void Simulator::addGoalToAgent(int agent,point2d goal){
+    assert(agent<goals.size());
+    goals[agent].push(goal);
+}
+
+
+/// @brief 
+/// @param agent 
+/// @return 
+point2d Simulator::getCurrentGoalOfAgent(int agent){
+    assert(agent<goals.size());
+    return goals[agent].front();
+}
+
+
+/// @brief 
+/// @param agent 
+/// @return 
+ACTION Simulator::getNextCorrectedAction(int agent){
+    assert(agent<corrected_actions.size());
+    return corrected_actions[agent];
+}
+
+/// @brief 
+/// @return 
+std::vector<ACTION> Simulator::getNextCorrectedActions()
+{
+    return corrected_actions;
 }
