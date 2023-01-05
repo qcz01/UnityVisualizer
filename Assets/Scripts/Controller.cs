@@ -44,7 +44,7 @@ public class Controller : MonoBehaviour
     private string json_config="";
 
 
-    private int rotation_cost;
+    private int rotation_cost=0;
 
 
 
@@ -126,7 +126,7 @@ public class Controller : MonoBehaviour
     void Start()
     {
 
-        //enable_listener = true;
+        enable_listener = true;
         runWithExternalCommand();
         ini_environment();
         if (enable_listener)
@@ -165,7 +165,7 @@ public class Controller : MonoBehaviour
             var agentsObject = GameObject.Find("Agents");
             agents = agentsObject.GetComponent<Agents>();
 
-            agents.build_from_file(instance_file,map.getXmax(),map.getYmax());
+            agents.build_from_file(instance_file,map.getXmax(),map.getYmax(),rotation_cost:rotation_cost);
         }
     }
 
@@ -212,6 +212,9 @@ public class Controller : MonoBehaviour
                     case "--actions":
                         action_file = args[i + 1];
                         actions_name = true;
+                        break;
+                    case "--rotation_cost":
+                        rotation_cost = int.Parse(args[i + 1]);
                         break;
                     //case "--enable_listener":
                     //    enable_listener = true;

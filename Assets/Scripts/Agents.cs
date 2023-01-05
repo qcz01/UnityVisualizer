@@ -20,9 +20,19 @@ public class Agents : MonoBehaviour
 
     public void send_cmd(int i,ACTION action)
     {
-        var rk = robot_objects[i];
-        var agent = rk.GetComponent<HolonomicAgent>();
-        agent.AddCmd(action);
+        if (rotation_cost == 0)
+        {
+            var rk = robot_objects[i];
+            var agent = rk.GetComponent<HolonomicAgent>();
+            agent.AddCmd(action);
+        }
+        else
+        {
+            var rk = robot_objects[i];
+            var agent = rk.GetComponent<KivaRobot>();
+            agent.AddCmd(action);
+        }
+     
     }
 
 
@@ -34,18 +44,31 @@ public class Agents : MonoBehaviour
     public void begin_simulate()
     {
         //Debug.Log("begin simulate");
-       for(int i = 0; i < robot_objects.Count; i++)
+        if (rotation_cost == 0)
         {
-            var agent = robot_objects[i].GetComponent<HolonomicAgent>();
-            agent.simCmds();
+            for (int i = 0; i < robot_objects.Count; i++)
+            {
+                var agent = robot_objects[i].GetComponent<HolonomicAgent>();
+                agent.simCmds();
+            }
         }
+        else
+        {
+            for (int i = 0; i < robot_objects.Count; i++)
+            {
+                var agent = robot_objects[i].GetComponent<KivaRobot>();
+                agent.simCmds();
+            }
+        }
+     
     }
 
-    public void build_from_file(string file_name, int xmax = 32, int ymax = 32,bool use_labels=false)
+    public void build_from_file(string file_name, int xmax = 32, int ymax = 32,bool use_labels=false,int rotation_cost=0)
     {
         //List<Vector2Int> starts = new List<Vector2Int>();
         string[] lines = File.ReadAllLines(file_name);
         int k = 0;
+        this.rotation_cost = rotation_cost;
         foreach (string line in lines)
         {
             string[] sg_strings = line.Split(' ');
@@ -56,17 +79,33 @@ public class Agents : MonoBehaviour
                 int gx = int.Parse(sg_strings[2]);
                 int gy = int.Parse(sg_strings[3]);
                 Vector3 position = new Vector3(sx + 0.5f, sy + 0.5f, -1);
-                GameObject rk = Instantiate(holoAgentPrefab, position, Quaternion.identity);
-                rk.transform.SetParent(transform);
-                rk.name = "robot_" + k;
-                robot_objects.Add(rk);
-                HolonomicAgent ri = rk.GetComponent<HolonomicAgent>();
-                if(use_labels)ri.setLabel(k);
-                k++;
-                Color ci = new Color(1.0f * gx / xmax, 0.80f * gy / ymax, 0.75f, 1.0f);
-                ri.setColor(ci);
+                if (rotation_cost == 0)
+                {
+                    GameObject rk = Instantiate(holoAgentPrefab, position, Quaternion.identity);
+                    rk.transform.SetParent(transform);
+                    HolonomicAgent ri = rk.GetComponent<HolonomicAgent>();
+                    if (use_labels) ri.setLabel(k);
+                    rk.name = "robot_" + k;
+                    robot_objects.Add(rk);
+                    Color ci = new Color(1.0f * gx / xmax, 0.80f * gy / ymax, 0.75f, 1.0f);
+                    ri.setColor(ci);
+                }
+                else
+                {
+                    GameObject rk = Instantiate(rotateAgentPrefab, position, Quaternion.identity);
+                    rk.transform.SetParent(transform);
+                    //rk.GetComponent<HolonomicAgent>().enabled = false;
+                    //rk.GetComponent<KivaRobot>().enabled = false;
+                    KivaRobot ri = rk.GetComponent<KivaRobot>();
+                    //if (use_labels) ri.setLabel(k);
+                    rk.name = "robot_" + k;
+                    robot_objects.Add(rk);
+                    Color ci = new Color(1.0f * gx / xmax, 0.80f * gy / ymax, 0.75f, 1.0f);
+                    ri.setColor(ci);
+                }
                
-                
+
+                k++;         
             }
         }
     }

@@ -34,11 +34,12 @@ PYBIND11_MODULE(MAPFSim, m ){
         .value("RIGHT",ACTION::RIGHT)
         .value("FORWARD",ACTION::FORWARD)
         .value("CLOCKWISE",ACTION::CLOCKWISE)
-        .value("COUNTERCLOCK",ACTION::LEFT)
+        .value("COUNTERCLOCK",ACTION::COUNTERCLOCK)
         .export_values();
 
     m.def("read_map",&read_map);
     m.def("read_instance",&read_instance);
     m.def("read_paths",&read_paths);
     m.def("pos_to_actions",&pos_to_actions);
+    m.def("read_actions",&read_actions);
 }

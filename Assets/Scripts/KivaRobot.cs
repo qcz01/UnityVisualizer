@@ -9,10 +9,18 @@ public class KivaRobot : MonoBehaviour
 {
     void Start()
     {
+        //StartCoroutine(StartExecution());
+    }
+
+
+    public void simCmds()
+    {
+        counter = 0;
+        Debug.Log("coroutine started  !");
         StartCoroutine(StartExecution());
     }
 
-    float speed=5.0f;
+    float speed=2.0f;
     float Heading=0;
     int rotation_cost=1;
     
@@ -20,13 +28,14 @@ public class KivaRobot : MonoBehaviour
     List<Vector2> path = new List<Vector2>(); // record the history path
     List<int> angles = new List<int>(); //record the history angles
     // List<Vector2> path=new List<Vector2>();
-    List<string> actions=new List<string>();
+    //List<string> actions=new List<string>();
+    List<ACTION> actions = new List<ACTION>();
 
     // public void AddWayPoint(Vector2 point){
     //     path.Add(point);
     // }
 
-    public void AddCmd(string action){
+    public void AddCmd(ACTION action){
         actions.Add(action);
     }
 
@@ -117,13 +126,13 @@ public class KivaRobot : MonoBehaviour
          
             while (counter<actions.Count)
             {
-                string action=actions[counter];
+                ACTION action=actions[counter];
                 Debug.Log("debug action="+action);
                 switch(action){
-                    case "F": var dg=getNextForwardPoint();yield return StartCoroutine(Coroutine_MoveToPoint(dg,speed));break;
-                    case "CCW":var angle=getNextAngle("CCW");float omega=90.0f*speed/rotation_cost; yield return StartCoroutine(Corountine_RotateToAngle(angle,omega));break;
-                    case "CW": angle=getNextAngle("CW");omega=90.0f*speed/rotation_cost; yield return StartCoroutine(Corountine_RotateToAngle(angle,omega));break;
-                    case "W": dg=transform.position;yield return StartCoroutine(Coroutine_MoveToPoint(dg,speed));break;
+                    case ACTION.FORWARD: var dg=getNextForwardPoint();yield return StartCoroutine(Coroutine_MoveToPoint(dg,speed));break;
+                    case ACTION.COUNTERCLOCK:var angle=getNextAngle("CCW");float omega=90.0f*speed/rotation_cost; yield return StartCoroutine(Corountine_RotateToAngle(angle,omega));break;
+                    case ACTION.CLOCKWISE: angle=getNextAngle("CW");omega=90.0f*speed/rotation_cost; yield return StartCoroutine(Corountine_RotateToAngle(angle,omega));break;
+                    case ACTION.WAIT: dg=transform.position;yield return StartCoroutine(Coroutine_MoveToPoint(dg,speed));break;
                     default: counter++; yield return null;break;
                 }
             

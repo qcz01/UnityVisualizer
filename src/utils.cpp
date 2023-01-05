@@ -2,6 +2,19 @@
 #include <fstream>
 #include <regex>
 
+
+
+ACTION string_to_action(std::string as){
+    if(as=="F") return ACTION::FORWARD;
+    if(as=="CCW") return ACTION::COUNTERCLOCK;
+    if(as=="CW") return ACTION::CLOCKWISE;
+    if(as=="W") return ACTION::WAIT;
+    if(as=="U") return ACTION::UP;
+    if(as=="L")return ACTION::LEFT;
+    if(as=="R") return ACTION::RIGHT;
+    if(as=="D") return ACTION::DOWN; 
+}
+
 /// @brief 
 /// @param map_file 
 /// @return 
@@ -194,4 +207,43 @@ std::vector<std::vector<std::pair<int,int>>> read_paths(std::string paths_file){
     }
     std::cout<<"num agents="<<paths.size()<<std::endl;
     return paths;
+}
+
+
+/// @brief 
+/// @param actions_file 
+/// @return 
+std::vector<std::vector<ACTION>> read_actions(std::string actions_file){
+    std::ifstream sol_file(actions_file);
+    std::string line;
+    std::regex r_comp_time=std::regex(R"(comp_time=(\d+))");
+    std::smatch results;
+    std::cout<<"read from "<<actions_file<<std::endl;
+    std::vector<std::vector<ACTION>>actions;
+    int k=0;
+    using strings=std::vector<std::string>;
+    while(getline(sol_file,line)){
+        //CRLF
+        if(*(line.end()-1)==0x0d) line.pop_back();
+        strings substrs;
+        tokenize(line,":",substrs);
+        if(substrs.size()<2) continue;
+        std::vector<ACTION> action_i;
+        actions.push_back(action_i);
+        // for(auto s:substrs) std::cout<<s<<std::endl;
+        auto path_string=substrs[1];
+        strings vertices;
+        tokenize(path_string,",",vertices);
+        for(int i=0;i<vertices.size()-1;i++){
+            std::string v=vertices[i];
+            // std::cout<<v<<" ";
+            // std::cout<<v<<" \n";
+           
+            // std::cout<<xy[0]<<" ,"<<xy[1]<<std::endl;
+            actions[k].push_back(string_to_action(v));
+        }
+        k++;
+    }
+    std::cout<<"num agents="<<actions.size()<<std::endl;
+    return actions;
 }

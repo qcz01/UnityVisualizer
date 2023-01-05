@@ -39,12 +39,12 @@ public class Robots : MonoBehaviour
             Color ci=new Color(1.0f*goal[0]/dims[0],0.80f*goal[1]/dims[1],0.75f,1.0f);
             // Debug.Log("color="+ci);
             // ri.setColor(ci);
-            for(int tk=0;tk<actions_k.Count;tk++){
-                string at=actions_k[tk];
-                // Debug.Log("debug"+pi);
-                // Assert.IsTrue((pi-lastPoint).magnitude<=1.0f);
-                ri.AddCmd(at);
-            }
+            //for(int tk=0;tk<actions_k.Count;tk++){
+            //    string at=actions_k[tk];
+            //    // Debug.Log("debug"+pi);
+            //    // Assert.IsTrue((pi-lastPoint).magnitude<=1.0f);
+            //    ri.AddCmd(at);
+            //}
         }
     }
 

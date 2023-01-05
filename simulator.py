@@ -11,6 +11,12 @@ import threading
 #unity exe directory
 unity_exe_dir="./MAPF-2D.exe"
 
+
+def test_read_actions():
+    actions=MAPFSim.read_actions("./demo32x32/demo_rotate.txt")
+    print(len(actions))
+    
+
 def test1():
     sim=MAPFSim.Simulator()
     xmax=32
@@ -95,8 +101,39 @@ def test_zmq_with_unity(paths_file):
         # print(str(json.dumps(test_dict)))
         time.sleep(0.2)
 
+
+def zmq_send_actions_with_unity(actions_file):
+    
+    # paths_file="C:/Users/GREATEN/MAPF-2D/Assets/Resources/PathFile/den312_demo.txt"
+    actions=MAPFSim.read_actions(actions_file)
+    makespan=max([len(p) for p in actions])
+    # print(len(paths))
+    context = zmq.Context()
+    # for path in paths:
+    #     print(path)
+
+        # print(i,action)
+    socket = context.socket(zmq.PUB)
+    print("socket binded","tcp://*:5556")
+    socket.bind("tcp://*:5556")
+    t=0
+    time.sleep(10)
+    while t<makespan:
+        test_dict=dict()
+        for i,action in enumerate(actions):
+            if t<len(action):
+                test_dict[i]=int(action[t])
+            else:
+                test_dict[i]=int(MAPFSim.ACTION.WAIT)
+        socket.send_string(str(json.dumps(test_dict)))
+        t+=1
+        print(t)
+        # print(str(json.dumps(test_dict)))
+        time.sleep(0.2)
+
+
 def open_gui(args):
-    cmd = [unity_exe_dir,"--map",args.map,"--instance",args.instance,"--speed",str(args.speed),"--labels",str(args.labels)]
+    cmd = [unity_exe_dir,"--map",args.map,"--instance",args.instance,"--speed",str(args.speed),"--labels",str(args.labels),"--rotation_cost",str(args.rotation_cost)]
     print(cmd)
     check_output(cmd, stderr=STDOUT, timeout=100).decode("utf-8")
 
@@ -124,6 +161,8 @@ def main():
     parser.add_argument("--gui",type=bool,default=False,help="run gui")
     parser.add_argument("--json",type=str,default=None,help="all configs in json")
     parser.add_argument("--labels",type=bool,default=False,help="show labels")
+    parser.add_argument("--rotation_cost",type=int,default=0,help="rotation cost")
+    
     args = parser.parse_args()
     if args.json is not None:
         with open(args.json,"r") as f:
@@ -135,6 +174,10 @@ def main():
             args.labels=cmd_dict['labels']
             args.speed=cmd_dict['speed']
             args.actions=cmd_dict['actions']
+            try:
+                args.rotation_cost=cmd_dict["rotation_cost"]
+            except:
+                args.rotation_cost=0
 
     if args.map is not None:
         if args.instance is not None:
@@ -142,9 +185,12 @@ def main():
                 t = threading.Thread(target=open_gui,args=(args,))
                 t.start()
                 time.sleep(1)
-                if args.paths is not None:
+                if args.paths is not None and len(args.paths)!=0:
                     print(args.paths)
                     test_zmq_with_unity(args.paths)
+                if args.actions is not None and len(args.actions)!=0:
+                    print(args.actions)
+                    zmq_send_actions_with_unity(args.actions)
                 t.join()
 
     else:
@@ -164,4 +210,5 @@ if __name__=="__main__":
     
     # test_zmq_with_unity()
     main()
+    # test_read_actions()
     # json_example()
