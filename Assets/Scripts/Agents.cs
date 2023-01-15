@@ -35,6 +35,51 @@ public class Agents : MonoBehaviour
      
     }
 
+    public void enable_labels()
+    {
+        if (rotation_cost == 0)
+        {
+            for (int k = 0; k < robot_objects.Count; k++)
+            {
+                var rk = robot_objects[k];
+                var agent = rk.GetComponent<HolonomicAgent>();
+                agent.enableLabel();
+            }
+        }
+        else
+        {
+            for(int k = 0; k < robot_objects.Count; k++)
+            {
+                var rk = robot_objects[k];
+                var agent = rk.GetComponent<KivaRobot>();
+                agent.enableLabel();
+            }
+            
+        }
+    }
+
+    public void disable_labels()
+    {
+        if (rotation_cost == 0)
+        {
+            for (int k = 0; k < robot_objects.Count; k++)
+            {
+                var rk = robot_objects[k];
+                var agent = rk.GetComponent<HolonomicAgent>();
+                agent.disableLabel();
+            }
+        }
+        else
+        {
+            for (int k = 0; k < robot_objects.Count; k++)
+            {
+                var rk = robot_objects[k];
+                var agent = rk.GetComponent<KivaRobot>();
+                agent.disableLabel();
+            }
+        }
+    }
+
 
     public int get_num_agents()
     {
@@ -89,6 +134,7 @@ public class Agents : MonoBehaviour
                     robot_objects.Add(rk);
                     Color ci = new Color(1.0f * gx / xmax, 0.80f * gy / ymax, 0.75f, 1.0f);
                     ri.setColor(ci);
+                    ri.setLabel(k);
                 }
                 else
                 {
@@ -102,6 +148,7 @@ public class Agents : MonoBehaviour
                     robot_objects.Add(rk);
                     Color ci = new Color(1.0f * gx / xmax, 0.80f * gy / ymax, 0.75f, 1.0f);
                     ri.setColor(ci);
+                    ri.setLabel(k);
                 }
                
 

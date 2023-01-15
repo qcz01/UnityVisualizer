@@ -13,6 +13,23 @@ public class KivaRobot : MonoBehaviour
     }
 
 
+    private int label = 0;
+
+    public void setLabel(int label)
+    {
+        this.label = label;
+    }
+
+    public void enableLabel()
+    {
+        transform.GetComponent<TextMesh>().text = label.ToString();
+    }
+
+    public void disableLabel()
+    {
+        transform.GetComponent<TextMesh>().text = "";
+    }
+
     public void simCmds()
     {
         counter = 0;

@@ -73,7 +73,7 @@ public class Controller : MonoBehaviour
                 {
                     inMsg = msg;
                     
-                    //Debug.Log(inMsg+"  inMSG");
+                    Debug.Log(inMsg+"  inMSG");
 
                     if (!string.Equals(inMsg, ""))
                     {
