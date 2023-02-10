@@ -22,6 +22,10 @@ public enum ACTION
 
 public class Controller : MonoBehaviour
 {
+
+    [SerializeField] private Agents agents;
+    [SerializeField] private Map map;
+
     //public string listenting_port = "";
     bool has_rotations = false;
     private bool requesterIsStarted = false;
@@ -29,24 +33,25 @@ public class Controller : MonoBehaviour
     private List<Queue<ACTION>> cmds;
     private SubscriberSocket sub=null;
     bool canReplay = false;
-    bool enable_listener = true;
-    Agents agents;
+    bool enable_listener = false;
+    
     private Queue<List<ACTION>> buffer=new Queue<List<ACTION>>();
     GameObject mapObject = null;
 
     bool simulating_start = false;
     bool use_labels = false;
+    private float speed=1.0f;
 
     private string map_file="./Assets/Resources/Maps/den312d.map";
     private string paths_file="./Assets/Resources/Paths/den312_demo.txt";
     private string instance_file= "./Assets/Resources/Instances/den312d/den312d_agents20_0.scen";
     private string action_file="";
     private string json_config="";
+    private string task_file = "";
+    private string plan_file = ""; //used for start kit plan 
 
 
     private int rotation_cost=0;
-
-
 
     
 
@@ -108,7 +113,7 @@ public class Controller : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        Debug.Log("close client");
+        //Debug.Log("close client");
         if(sub!=null)sub.Close();
         
         NetMQConfig.Cleanup();
@@ -125,8 +130,48 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //demo();
+        startKit_exe();
+    
 
-        enable_listener = true;
+    }
+
+    void demo()
+    {
+        //string exe_plan = "./Assets/kits/exp/test_actual.txt";
+        //string task_file = "./Assets/kits/maps/tasks_room.txt";
+        //map_file = "./Assets/kits/maps/room-32-32-4.map";
+
+        plan_file = "./Assets/kits/exp/6x6demo.txt";
+        task_file = "./Assets/kits/maps/6x6task.txt";
+        map_file = "./Assets/Resources/Maps/6x6.map";
+        //mapObject = GameObject.Find("Tilemap");
+        //var map = mapObject.GetComponent<Map>();
+        map.build_map(map_file);
+        //var agentsObject = GameObject.Find("Agents");
+        //agents = agentsObject.GetComponent<Agents>();
+
+        agents.initialize_from_startKits(plan_file,task_file);
+
+        agents.begin_simulate();
+
+    }
+
+
+    void startKit_exe()
+    {
+        //default
+        plan_file = "./Assets/kits/exp/6x6demo.txt";
+        task_file = "./Assets/kits/maps/6x6task.txt";
+        map_file = "./Assets/Resources/Maps/6x6.map";
+        runWithExternalCommand();
+        map.build_map(map_file);
+        agents.initialize_from_startKits(plan_file, task_file,speed);
+        agents.begin_simulate();
+    }
+
+    void simulator_exe()
+    {
         runWithExternalCommand();
         ini_environment();
         if (enable_listener)
@@ -136,7 +181,6 @@ public class Controller : MonoBehaviour
         //System.Threading.Thread.Sleep(10000);
         //var agents = agentsObject.GetComponent<Agents>();
         agents.begin_simulate();
-
     }
 
     // Update is called once per frame
@@ -156,14 +200,14 @@ public class Controller : MonoBehaviour
 
     void ini_environment()
     {
-        mapObject = GameObject.Find("Tilemap");
-        var map = mapObject.GetComponent<Map>();
+        //mapObject = GameObject.Find("Tilemap");
+        //var map = mapObject.GetComponent<Map>();
         map.build_map(map_file);
 
         if (instance_file.Length != 0)
         {
-            var agentsObject = GameObject.Find("Agents");
-            agents = agentsObject.GetComponent<Agents>();
+            //var agentsObject = GameObject.Find("Agents");
+            //agents = agentsObject.GetComponent<Agents>();
 
             agents.build_from_file(instance_file,map.getXmax(),map.getYmax(),rotation_cost:rotation_cost);
         }
@@ -216,15 +260,21 @@ public class Controller : MonoBehaviour
                     case "--rotation_cost":
                         rotation_cost = int.Parse(args[i + 1]);
                         break;
-                    //case "--enable_listener":
-                    //    enable_listener = true;
-                    //    break;
+                    case "--enable_listener":
+                        enable_listener = false;
+                        break;
                     case "--speed":
+                        speed = float.Parse(args[i + 1]);
                         break;
                     case "--labels":
                         use_labels =bool.Parse(args[i + 1]);
                         break;
-           
+                    case "--plan":
+                        plan_file = args[i + 1];
+                        break;
+                    case "--task":
+                        task_file = args[i + 1];
+                        break;
                     default:
                         break;
                 }

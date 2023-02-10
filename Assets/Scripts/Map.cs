@@ -6,13 +6,22 @@ using UnityEngine.Tilemaps;
 public class Map : MonoBehaviour
 {
     // Start is called before the first frame update
-    public Tile obstacleTile;
-    public Tile freeTile;
+    [SerializeField]
+    Tile obstacleTile;
+    [SerializeField]
+    Tile freeTile;
+ 
+
+    [SerializeField]
+    Tile highlightTile;
+    [SerializeField]
+    Tilemap mapf_map;
+       
     //public string map_file="./Assets/Resources/Maps/random-32-32-10.map";
 
     int xmax;
     int ymax;
-    private Tilemap mapf_map;
+    
 
     void resetCamera(int mX,int mY){
        
@@ -28,14 +37,23 @@ public class Map : MonoBehaviour
      
     }
 
+
+    public void highlight_conflict(int x,int y,bool conflict)
+    {
+        if(conflict==true) mapf_map.SetTile(new Vector3Int(x, y, 0), highlightTile);
+        else mapf_map.SetTile(new Vector3Int(x, y, 0), freeTile);
+    }
+
     public void build_map(string file_name)
     {
-        mapf_map = GetComponent<Tilemap>();
+        //mapf_map = GetComponent<Tilemap>();
         //Debug.Log("map name=" + map_file);
         Graph graph = new Graph(file_name);
         resetCamera(graph.getXmax(), graph.getYmax());
         xmax = graph.getXmax();
         ymax = graph.getYmax();
+        var camera=GameObject.Find("Main Camera").GetComponent<CameraControl>();
+        camera.setCameraBound(-1, xmax + 1, -1, ymax + 1);
         for (int xi = 0; xi < graph.getXmax(); xi++)
         {
             for (int yi = 0; yi < graph.getYmax(); yi++)

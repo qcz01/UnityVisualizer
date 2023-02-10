@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UseLabel : MonoBehaviour
+public class ShowGoal : MonoBehaviour
 {
     [SerializeField]
     Toggle m_Toggle;
@@ -35,13 +35,14 @@ public class UseLabel : MonoBehaviour
 
     void disableLabels()
     {
-        agents.disable_labels();
-        
+        agents.show_goals(false);
+
     }
 
 
     void enableLabels()
     {
-        agents.enable_labels();
+        agents.show_goals(true);
     }
+
 }

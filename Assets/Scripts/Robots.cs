@@ -13,6 +13,7 @@ public class Robots : MonoBehaviour
 
     public string solutionFile;
 
+    
 
     void construct_from_file(string file_name){
         if(file_name.Length==0){
@@ -49,12 +50,15 @@ public class Robots : MonoBehaviour
     }
 
 
+
+
+
+    
+
     
     void Start()
     {
-        
-      
-        construct_from_file(solutionFile);
+        //construct_from_file(solutionFile);
     }
 
 }
